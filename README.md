@@ -10,17 +10,17 @@ https://github.com/amix/vimrc
 
 Clone this repository:
 
-'''sh
+```sh
 
 git clone git@github.com:renantamashiro/dotfile_vim.git ~/Documents
 
-'''
+```
 
 
 Change the original source to my_config.vim into your .vimrc file:
 
-'''sh
+```sh
 
 source ~/Documents/dotfile_vim/my_config.vim
 
-'''
+```
