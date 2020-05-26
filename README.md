@@ -1,4 +1,4 @@
-# My dotfiles Vim
+# My Vim config
 
 Using The Ultimate Vim Configuration:
 
