@@ -1,4 +1,4 @@
-# My dotfiles Vim
+# My Vim config
 
 Using The Ultimate Vim Configuration:
 
@@ -21,6 +21,6 @@ Change the original source to my_config.vim into your .vimrc file:
 
 ```sh
 
-source ~/Documents/dotfile_vim/my_config.vim
+source ~/Documents/dotfile_vim/my_configs.vim
 
 ```
