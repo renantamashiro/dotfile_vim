@@ -1,11 +1,28 @@
 " plugins
+set nocompatible              " be iMproved, required
+filetype off
+
 let need_to_install_plugins = 0
 if empty(glob('~/.vim/autoload/plug.vim'))
     silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    "autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
     let need_to_install_plugins = 1
 endif
+
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'ycm-core/YouCompleteMe'
+Plugin 'morhetz/gruvbox'
+Plugin 'moll/vim-node'
+Plugin 'posva/vim-vue'
+Plugin 'alvan/vim-closetag'
+call vundle#end()            " required
+filetype plugin indent on    " required
 
 call plug#begin()
 Plug 'tpope/vim-sensible'
@@ -13,14 +30,17 @@ Plug 'itchyny/lightline.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'ap/vim-buftabline'
 Plug 'airblade/vim-gitgutter'
-Plug 'vim-scripts/The-NERD-tree'
+Plug 'preservim/nerdtree'
 Plug 'jistr/vim-nerdtree-tabs'
 Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'scrooloose/syntastic'
+Plug 'jiangmiao/auto-pairs'
+Plug 'dense-analysis/ale'
 Plug 'majutsushi/tagbar'
 Plug 'vim-scripts/indentpython.vim'
 Plug 'lepture/vim-jinja'
 Plug 'pangloss/vim-javascript'
+Plug 'alvan/vim-closetag'
+Plug 'maxmellon/vim-jsx-pretty'
 call plug#end()
 
 filetype plugin indent on
@@ -55,6 +75,13 @@ set softtabstop=4
 set colorcolumn=80
 set expandtab
 set viminfo='25,\"50,n~/.viminfo
+autocmd FileType html setlocal tabstop=2 shiftwidth=2 softtabstop=2
+autocmd FileType css setlocal tabstop=2 shiftwidth=2 softtabstop=2
+autocmd FileType javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2
+autocmd FileType vue setlocal tabstop=2 shiftwidth=2 softtabstop=2
+
+" auto-pairs
+au FileType python let b:AutoPairs = AutoPairsDefine({"f'" : "'", "r'" : "'", "b'" : "'"})
 
 " word movement
 imap <S-Left> <Esc>bi
@@ -64,8 +91,10 @@ nmap <S-Right> w
 
 " indent/unindent with tab/shift-tab
 nmap <Tab> >>
-imap <S-Tab> <Esc><<i
 nmap <S-tab> <<
+imap <S-Tab> <Esc><<i
+vmap <Tab> >gv
+vmap <S-Tab> <gv
 
 " mouse
 set mouse=a
@@ -85,7 +114,7 @@ endfunction
 
 " color scheme
 syntax on
-colorscheme onedark
+colorscheme gruvbox 
 filetype on
 filetype plugin indent on
 
@@ -158,17 +187,18 @@ function NERDTreeToggle()
     endif
 endfunction
 
-" syntastic
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-map <leader>s :SyntasticCheck<CR>
-map <leader>d :SyntasticReset<CR>
-map <leader>e :lnext<CR>
-map <leader>r :lprev<CR>
+function! StartUp()
+    if 0 == argc()
+        NERDTree
+    end
+endfunction
+autocmd VimEnter * call StartUp()
 
-" tag list
+" ale
+map <C-e> <Plug>(ale_next_wrap)
+map <C-r> <Plug>(ale_previous_wrap)
+
+" tags
 map <leader>t :TagbarToggle<CR>
 
 " copy, cut and paste
@@ -189,3 +219,48 @@ function! XTermPasteBegin()
 endfunction
 
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+" filenames like *.xml, *.html, *.xhtml, ...
+" These are the file extensions where this plugin is enabled.
+"
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.vue'
+
+" filenames like *.xml, *.xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+"
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx'
+
+" filetypes like xml, html, xhtml, ...
+" These are the file types where this plugin is enabled.
+"
+let g:closetag_filetypes = 'html,xhtml,phtml,vue'
+
+" filetypes like xml, xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+"
+let g:closetag_xhtml_filetypes = 'xhtml,jsx'
+
+" integer value [0|1]
+" This will make the list of non-closing tags case-sensitive (e.g. `<Link>` will be closed while `<link>` won't.)
+"
+let g:closetag_emptyTags_caseSensitive = 1
+
+" dict
+" Disables auto-close if not in a "valid" region (based on filetype)
+"
+let g:closetag_regions = {
+    \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+    \ 'javascript.jsx': 'jsxRegion',
+    \ }
+
+" Shortcut for closing tags, default is '>'
+"
+let g:closetag_shortcut = '>'
+
+" Add > at current position without closing the current tag, default is ''
+"
+let g:closetag_close_shortcut = '<leader>>'
+
+set termwinsize=9x0
+set splitbelow
+set autochdir
