@@ -1,5 +1,5 @@
 " plugins
-set nocompatible              " be iMproved, required
+set nocompatible
 filetype off
 
 let need_to_install_plugins = 0
