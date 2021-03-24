@@ -16,7 +16,7 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'ycm-core/YouCompleteMe'
+" Plugin 'ycm-core/YouCompleteMe'
 Plugin 'morhetz/gruvbox'
 Plugin 'moll/vim-node'
 Plugin 'posva/vim-vue'
